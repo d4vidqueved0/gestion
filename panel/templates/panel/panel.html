@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Peliculas{% endblock %}
+
+{% block content %}
+{% if trabajador %}
+<h1>Bienvenido {{user.trabajador.persona_fk.nombres}} {{user.trabajador.persona_fk.apellido_paterno}}</h1>
+<h3>Area: {{user.trabajador.departamento_fk.area_fk.nombre_area}}</h3>
+<h3>Departamento: {{user.trabajador.departamento_fk.nombre_departamento}}</h3>
+<h3>Cargo: {{trabajador.cargo_fk.nombre_cargo}}</p>
+{% endif %}
+<h1>Bienvenido Admin</h1>
+
+
+
+{% endblock %}

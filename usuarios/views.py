@@ -13,8 +13,7 @@ def login_view(request):
             return render(request, 'usuarios/login.html')  
         if usuario is not None:
             login(request, usuario)
-            messages.error(request, 'Bienvenido.')
-            return redirect('registro:vistaDatosPersonales') 
+            return redirect('panel:panel') 
         else:
             messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
     return render(request, 'usuarios/login.html')
