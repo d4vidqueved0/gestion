@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Formulario de contacto de emergencia</h2>
+<form method="post">
+    {% csrf_token %}
+    {{form}}
+
+    <button type="submit" class="btn btn-primary">Siguiente</button>
+</form>
+{% endblock %}

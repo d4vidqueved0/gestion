@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Formulario de datos personales</h2>
+{{msj}}
+<form method="post">
+    {% csrf_token %}
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        {{form}}
+        <button type="submit" class="btn btn-primary" style="width: fit-content;">Siguiente</button>
+    </div>
+
+</form>
+{% endblock %}
