@@ -4,8 +4,8 @@
 <h2>Formulario de carga familiar</h2>
 <form method="post">
     {% csrf_token %}
-    {{form}}
-
-    <button type="submit" class="btn btn-primary">Siguiente</button>
-</form>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        {{form}}
+        <button type="submit" class="btn btn-primary" style="width: fit-content;">Siguiente</button>
+    </div></form>
 {% endblock %}

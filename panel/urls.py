@@ -5,5 +5,5 @@ app_name = 'panel'
 
 urlpatterns = [
     path('', views.panel, name='panel'),
-
+    path('tabla/?page=1', views.tabla, name='tabla')
 ]

@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
 class Area(models.Model):
     Areas = (
-        ('',''),
         ('Area1','Area1'),
         ('Area2','Area2'),
     )
@@ -15,7 +16,6 @@ class Area(models.Model):
 
 class Departamento(models.Model):
     Departamentos = (
-        ('',''),
         ('Departamento1','Departamento1'),
         ('Departamento2','Departamento2'),
         ('Departamento3','Departamento3'),
@@ -30,7 +30,6 @@ class Departamento(models.Model):
 
 class Cargo(models.Model):
     Cargos = (
-        ('', ''),
         ('Jefe RR.HH', 'Jefe RR.HH'),
         ('Personal RR.HH', 'Personal RR.HH'),
         ('Trabajador', 'Trabajador'),
@@ -43,7 +42,6 @@ class Cargo(models.Model):
 
 class ContactoEmergencia(models.Model):
     Relaciones = (
-        ('', ''),
         ('Padre', 'Padre'),
         ('Madre', 'Madre'),
         ('Hijo', 'Hijo'),
@@ -73,7 +71,6 @@ class ContactoEmergencia(models.Model):
 
 class CargaFamiliar(models.Model):
     Parentescos = (
-        ('', ''),
         ('Padre', 'Padre'),
         ('Madre', 'Madre'),
         ('Hijo', 'Hijo'),
@@ -95,13 +92,12 @@ class CargaFamiliar(models.Model):
         ('Otro', 'Otro'),
     )
     Sexo = (
-        ('', ''),
         ('Masculino', 'Masculino'),
         ('Femenino', 'Femenino'),
     )
     rut = models.CharField(max_length=12)
     nombre = models.CharField(max_length=100)
-    sexo = models.CharField(max_length=10, choices=Sexo)
+    sexo = models.CharField(max_length=30, choices=Sexo)
     parentesco = models.CharField(max_length=20, choices=Parentescos)
 
 
@@ -115,7 +111,7 @@ class Persona(models.Model):
     apellido_paterno = models.CharField(max_length=100)
     apellido_materno = models.CharField(max_length=100)
     rut = models.CharField(max_length=12)
-    sexo = models.CharField(max_length=10, choices=Sexo)
+    sexo = models.CharField(max_length=30, choices=Sexo)
     direccion = models.CharField(max_length=200)
     telefono = models.CharField(max_length=15)
 

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Tabla{% endblock %}
+
+{% block content %}
+
+<h1>Tabla trabajadores</h1>
+
+<section style="display: flex; justify-content: space-between; align-items: center;" class="mb-2">
+    <p style="margin: 0;">Mostrando {{ page_obj.end_index }} de {{ page_obj.paginator.count }} trabajadores.</p>
+    <form class="d-flex" style="width: 60%;" role="search" method="get">
+        <input class="form-control me-2" value="{{ query }}" type="search" name="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+</section>
+<table class="table">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">R.U.T.</th>
+            <th scope="col">Nombres</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Sexo</th>
+            <th scope="col">Cargo</th>
+        </tr>
+    </thead>
+    {% for trabajador in page_obj %}
+    <tbody>
+        <tr>
+            <th scope="row">{{trabajador.persona_fk.rut}}</th>
+            <td>{{trabajador.persona_fk.nombres}}</td>
+            <td>{{trabajador.persona_fk.apellido_paterno}} {{trabajador.persona_fk.apellido_materno}}</td>
+            <td>{{trabajador.persona_fk.sexo}}</td>
+            <td>{{trabajador.cargo_fk.nombre_cargo}}</td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Primera</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

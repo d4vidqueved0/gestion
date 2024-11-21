@@ -3,8 +3,9 @@ from django.contrib.auth.hashers import make_password
 from .forms import FormularioDatosPersonales, FormularioContactoEmergencia, FormularioCargaFamiliar, FormularioDatosLaborales
 from .models import Trabajador, Cargo, Persona, CargaFamiliar, ContactoEmergencia
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def vistaDatosPersonales(request):
     if request.method == 'GET':
         form = FormularioDatosPersonales()
@@ -13,9 +14,10 @@ def vistaDatosPersonales(request):
         form = FormularioDatosPersonales(request.POST)
         if form.is_valid():
             request.session['persona'] = form.cleaned_data
-        return redirect('registro:vistaCargaFamiliar')
+            return redirect('registro:vistaCargaFamiliar')
+        return render(request, 'registro/formulario_datos_personales.html', {'form': form})
 
-
+@login_required
 def vistaCargaFamiliar(request):
     if request.method == 'GET':
         form = FormularioCargaFamiliar()
@@ -24,9 +26,11 @@ def vistaCargaFamiliar(request):
         form = FormularioCargaFamiliar(request.POST)
         if form.is_valid():
             request.session['carga'] = form.cleaned_data
-        return redirect('registro:vistaContactoEmergencia')
+            return redirect('registro:vistaContactoEmergencia')
+        return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
 
 
+@login_required
 def vistaContactoEmergencia(request):
     if request.method == 'GET':
         form = FormularioContactoEmergencia()
@@ -37,7 +41,7 @@ def vistaContactoEmergencia(request):
             request.session['contacto'] = form.cleaned_data
         return redirect('registro:vistaDatosLaborales')
 
-
+@login_required
 def vistaDatosLaborales(request):
     if request.method == 'GET':
         form = FormularioDatosLaborales()
