@@ -110,7 +110,4 @@ class FormularioCargaFamiliar(forms.ModelForm):
         if not validarRut(rut):
             raise forms.ValidationError("El R.U.T. no es válido.")
 
-        if CargaFamiliar.objects.filter(rut=rut).exists():
-            raise forms.ValidationError("El R.U.T. ya se encuentra ingresado.")
-
         return rut

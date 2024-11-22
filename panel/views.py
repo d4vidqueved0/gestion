@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from registro.models import Trabajador
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-
 @login_required
 def panel(request):
     if request.user.is_authenticated :
@@ -21,23 +21,39 @@ def panel(request):
     
 @login_required
 def tabla(request):
+    
+    order = request.GET.get('order', 'persona_fk__rut')
     query = request.GET.get('search', '')
 
-    # Filtrar los trabajadores según el término de búsqueda
+    trabajadores = Trabajador.objects.all()
+
     if query:
-        trabajadores = Trabajador.objects.filter(
-            Q(persona_fk__rut__icontains=query) |
+        trabajadores = trabajadores.filter(
             Q(persona_fk__nombres__icontains=query) |
             Q(persona_fk__apellido_paterno__icontains=query) |
-            Q(persona_fk__apellido_materno__icontains=query)
+            Q(persona_fk__apellido_materno__icontains=query) |
+            Q(cargo_fk__nombre_cargo__icontains=query) |
+            Q(persona_fk__sexo__icontains=query)
         )
-    else:
-        trabajadores = Trabajador.objects.all()
 
-    trabajadores = trabajadores.order_by('persona_fk__rut')
+    trabajadores = trabajadores.order_by(order)
 
     paginator = Paginator(trabajadores, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'panel/tabla_trabajadores.html', {'page_obj': page_obj, 'query': query})
+
+
+def eliminar(request, delete):
+    print(delete)
+    if delete:
+        trabajador = get_object_or_404(Trabajador, pk=delete)
+        trabajador.delete()
+        messages.success(request, 'Trabajador eliminado correctamente')
+    
+    return redirect('panel:tabla')
+
+
+def inicio(request):
+    return render(request, 'panel/inicio.html')

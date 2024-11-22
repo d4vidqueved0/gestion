@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}Tabla{% endblock %}
+{% block title %}Tabla trabajadores{% endblock %}
 
 {% block content %}
-
+<style>
+    .no-button{
+        background: none;
+        border: none;
+        color: white;
+        padding: 0;
+    }
+</style>
 <h1>Tabla trabajadores</h1>
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 <section style="display: flex; justify-content: space-between; align-items: center;" class="mb-2">
     <p style="margin: 0;">Mostrando {{ page_obj.end_index }} de {{ page_obj.paginator.count }} trabajadores.</p>
@@ -13,16 +29,48 @@
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
 </section>
+<div class="table-responsive">
 <table class="table">
     <thead class="table-dark">
         <tr>
-            <th scope="col">R.U.T.</th>
-            <th scope="col">Nombres</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Sexo</th>
-            <th scope="col">Cargo</th>
+            <form method="get" role="order">
+                <th>
+                    <input type="hidden" name="order" value="persona_fk__rut">
+                    <button class="no-button">R.U.T.</button>
+                </th>
+            </form>
+            <form method="get" role="order">
+                <th>
+                    <input type="hidden" name="order" value="persona_fk__nombres">
+                    <button class="no-button">Nombres</button>
+                </th>
+            </form>
+            <form method="get" role="order">
+                <th>
+                    <input type="hidden" name="order" value="persona_fk__apellido_paterno">
+                    <button class="no-button">Apellidos</button>
+                </th>
+            </form>
+            <form method="get" role="order">
+                <th>
+                    <input type="hidden" name="order" value="persona_fk__sexo">
+                    <button class="no-button">Sexo</button>
+                </th>
+            </form>
+            <form method="get" role="order">
+                <th>
+                    <input type="hidden" name="order" value="cargo_fk__nombre_cargo">
+                    <button class="no-button">Cargo</button>
+                </th>
+            </form>
+            {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1%}
+            <th>
+                Acción
+            </th>
+            {% endif %}
         </tr>
     </thead>
+    
     {% for trabajador in page_obj %}
     <tbody>
         <tr>
@@ -31,10 +79,34 @@
             <td>{{trabajador.persona_fk.apellido_paterno}} {{trabajador.persona_fk.apellido_materno}}</td>
             <td>{{trabajador.persona_fk.sexo}}</td>
             <td>{{trabajador.cargo_fk.nombre_cargo}}</td>
+            {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1%}
+            <td>
+                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{trabajador.id}}">Eliminar</a>
+            </td>
+            {% endif %}
+
         </tr>
     </tbody>
+    <div class="modal" id="modal{{trabajador.id}}" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Advertencia</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro de  eliminar al trabajador {{trabajador.persona_fk.nombres}} {{trabajador.persona_fk.apellido_paterno}}?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar' trabajador.id %}">Eliminar</a>
+            </div>
+          </div>
+        </div>
+      </div>
     {% endfor %}
 </table>
+</div>
 
 <div class="pagination">
     <span class="step-links">
@@ -53,5 +125,7 @@
         {% endif %}
     </span>
 </div>
+
+
 
 {% endblock %}
