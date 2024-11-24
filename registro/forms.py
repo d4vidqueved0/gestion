@@ -5,18 +5,25 @@ from .validar_rut import validarRut
 class FormularioDatosPersonales(forms.ModelForm):
     class Meta:
         model = Persona
-        fields = ['nombres', 'apellido_paterno', 'apellido_materno', 'rut', 'sexo', 'direccion', 'telefono']
+        fields = ['rut', 'nombres', 'apellido_paterno', 'apellido_materno', 'sexo', 'direccion', 'telefono']
         widgets = {
+            'rut': forms.TextInput(attrs={'class': 'form-control'}),
             'nombres': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_paterno': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_materno': forms.TextInput(attrs={'class': 'form-control'}),
-            'rut': forms.TextInput(attrs={'class': 'form-control'}),
             'sexo': forms.Select(attrs={'class': 'form-control'}),
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
             'telefono' : forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.skip_rut_validation = kwargs.pop('skip_rut_validation', False)
+        super().__init__(*args, **kwargs)
+
     def clean_rut(self):
+
+        if self.skip_rut_validation:
+            return self.cleaned_data.get('rut')
 
         rut = self.cleaned_data.get('rut')
         

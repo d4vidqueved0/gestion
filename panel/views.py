@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from registro.models import Trabajador
+from registro.models import Trabajador, Persona, CargaFamiliar, ContactoEmergencia
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from registro.forms import FormularioDatosPersonales, FormularioCargaFamiliar, FormularioContactoEmergencia
 
 # Create your views here.
 @login_required
@@ -57,3 +58,24 @@ def eliminar(request, delete):
 
 def inicio(request):
     return render(request, 'panel/inicio.html')
+
+
+def datos(request, pk):
+    persona = get_object_or_404(Persona, pk=pk)
+    cargasF = CargaFamiliar.objects.filter(trabajador = request.user.trabajador)
+    contactoE = ContactoEmergencia.objects.filter(trabajador = request.user.trabajador)
+    if request.method == 'POST':
+        form = FormularioDatosPersonales(request.POST,  instance=persona, skip_rut_validation=True)
+        print(form.is_valid())
+        if form.is_valid():
+            form.save()
+            form = FormularioDatosPersonales(instance=persona)
+            messages.success(request, 'Datos personales actualizados correctamente.')
+            return redirect('panel:panel')
+        else:
+            form = FormularioDatosPersonales(instance=persona)
+            return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})
+
+    else:
+        form = FormularioDatosPersonales(instance=persona)
+        return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})

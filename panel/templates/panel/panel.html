@@ -8,8 +8,24 @@
 <h3>Area: {{user.trabajador.departamento_fk.area_fk.nombre_area}}</h3>
 <h3>Departamento: {{user.trabajador.departamento_fk.nombre_departamento}}</h3>
 <h3>Cargo: {{trabajador.cargo_fk.nombre_cargo}}</p>
+    <div style="display: flex; width: fit-content; flex-wrap: wrap; gap: 10px;">
+
+        <a href="{% url 'panel:datos' trabajador.persona_fk.pk %}" class="btn btn-primary">Ver mis datos</a>
+        <a href="{% url 'registro:vistaDatosPersonales' %}" class="btn btn-primary">Crear ficha</a>
+        <a href="{% url 'panel:tabla' %}" class="btn btn-primary">Resumen trabajadores</a>
+    </div>
+
 {% else %}
 <h1>Bienvenido Admin</h1>
+{% endif %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show mt-3" style="font-size: 13px;" role="alert" >
+    {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+
 {% endif %}
 
 

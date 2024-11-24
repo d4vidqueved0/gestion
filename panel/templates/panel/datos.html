@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Ver mis datos{% endblock %}
+
+{% block content %}
+<style>
+    input[readonly], select[readonly] {
+    background-color: #f1f1f1;  /* Color de fondo gris para parecer desactivado */
+    pointer-events: none;  /* Evitar la interacción del usuario */
+    opacity: 0.6;  /* Reducir la opacidad para dar el efecto de desactivado */
+}
+</style>
+<div style="display: grid; grid-template-columns: 45% 45%; justify-content: space-between;">
+    <section >
+        <h1>Datos personales</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_rut">RUT:</label>
+                <input type="text" name="rut" id="id_rut" value="{{ form.rut.value }}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="id_nombres">Nombres:</label>
+                <input type="text" name="nombres" id="id_nombres" value="{{ form.nombres.value }}" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label for="id_apellido_paterno">Apellido Paterno:</label>
+                <input type="text" name="apellido_paterno" id="id_apellido_paterno" value="{{ form.apellido_paterno.value }}" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label for="id_apellido_materno">Apellido Materno:</label>
+                <input type="text" name="apellido_materno" id="id_apellido_materno" value="{{ form.apellido_materno.value }}" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label for="id_sexo">Sexo:</label>
+                <input type="text" name="sexo" id="id_sexo" value="{{ form.sexo.value }}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="id_direccion">Direccion:</label>
+                {{form.direccion}}
+            </div>
+            <div class="form-group">
+                <label for="id_telefono">Telefono:</label>
+                {{form.telefono}}
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Guardar cambios</button>
+        </form>
+    </section>
+    <div>
+        <section >
+            <h1>Cargas familiares</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre </th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for carga in cargasF %}
+                        <td>{{carga.nombre}}</td>
+                        <td>
+                            <a href="" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section >
+            <h1>Contactos emergencia</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for carga in cargasF %}
+                        <td>{{carga.nombre}}</td>
+                        <td>
+                            <a href="" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+{% endblock %}

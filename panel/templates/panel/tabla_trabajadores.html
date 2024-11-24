@@ -22,49 +22,115 @@
 </div>
 {% endif %}
 
-<section style="display: flex; justify-content: space-between; align-items: center;" class="mb-2">
+
+
+<section style="display: flex; justify-content: space-between; align-items: center; position: relative;" class="mb-2">
     <p style="margin: 0;">Mostrando {{ page_obj.end_index }} de {{ page_obj.paginator.count }} trabajadores.</p>
-    <form class="d-flex" style="width: 60%;" role="search" method="get">
-        <input class="form-control me-2" value="{{ query }}" type="search" name="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+    <div style="display: flex; width: 70%; justify-content: end; gap: 10px;">
+        <form class="d-flex" style="width: 100%;" role="search" method="get">
+            <input class="form-control me-2" value="{{ query }}" type="search" name="search" placeholder="Buscar"
+                aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+      </div>
+      <p style="margin: 0;">
+        <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          Filtrar
+        </button>
+      </p>
+      <div class="collapse collapse-horizontal mb-3" id="collapseExample" style="position: absolute; right: 0; top: 45px;">
+    <div class="card card-body" style="width: fit-content;">
+        <div style="display: grid; grid-template-columns: 100px 100px; width: fit-content; gap: 5px;">
+
+            <form method="get" role="order">
+                <input type="hidden" name="order" value="persona_fk__rut">
+                <button class="btn btn-primary btn-sm">RUT<i class="bi bi-arrow-up"></i> </button>
+
+            </form>
+            <form role="order" method="get">
+                <input type="hidden" name="order" value="-persona_fk__rut">
+                <button class="btn btn-primary btn-sm">RUT<i class="bi bi-arrow-down"></i></button>
+            </form>
+
+            <form method="get" role="order">
+                <input type="hidden" name="order" value="persona_fk__nombres">
+                <button class="btn btn-primary btn-sm">Nombres<i class="bi bi-arrow-up"></i></button>
+            </form>
+
+            <form method="get" role="order">
+                <input type="hidden" name="order" value="-persona_fk__nombres">
+                <button class="btn btn-primary btn-sm">Nombres <i class="bi bi-arrow-down"></i></button>
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="persona_fk__apellido_paterno">
+                <button class="btn btn-primary btn-sm">Apellidos<i class="bi bi-arrow-up"></i></button>
+
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="-persona_fk__apellido_paterno">
+                <button class="btn btn-primary btn-sm">Apellidos<i class="bi bi-arrow-down"></i></button>
+
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="persona_fk__sexo">
+                <button class="btn btn-primary btn-sm">Sexo<i class="bi bi-arrow-up"></i></button>
+
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="-persona_fk__sexo">
+                <button class="btn btn-primary btn-sm">Sexo<i class="bi bi-arrow-down"></i></button>
+
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="cargo_fk__nombre_cargo">
+                <button class="btn btn-primary btn-sm">Cargo<i class="bi bi-arrow-up"></i></button>
+
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="-cargo_fk__nombre_cargo">
+                <button class="btn btn-primary btn-sm">Cargo<i class="bi bi-arrow-down"></i></button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 </section>
+
+
+
 <div class="table-responsive">
 <table class="table">
     <thead class="table-dark">
         <tr>
-            <form method="get" role="order">
-                <th>
-                    <input type="hidden" name="order" value="persona_fk__rut">
-                    <button class="no-button">R.U.T.</button>
+          
+                <th style="border-radius: 7px 0px 0px 0px;">
+                    R.U.T
                 </th>
-            </form>
-            <form method="get" role="order">
+          
                 <th>
-                    <input type="hidden" name="order" value="persona_fk__nombres">
-                    <button class="no-button">Nombres</button>
+                    Nombres
                 </th>
-            </form>
-            <form method="get" role="order">
+          
                 <th>
-                    <input type="hidden" name="order" value="persona_fk__apellido_paterno">
-                    <button class="no-button">Apellidos</button>
+                    Apellidos
                 </th>
-            </form>
-            <form method="get" role="order">
+          
                 <th>
-                    <input type="hidden" name="order" value="persona_fk__sexo">
-                    <button class="no-button">Sexo</button>
+                    Sexo
                 </th>
-            </form>
-            <form method="get" role="order">
+          
                 <th>
-                    <input type="hidden" name="order" value="cargo_fk__nombre_cargo">
-                    <button class="no-button">Cargo</button>
+                    Cargo
                 </th>
-            </form>
-            {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1%}
-            <th>
+            {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1 %}
+            <th style="border-radius: 0px 7px 0px 0px;">
                 Acción
             </th>
             {% endif %}
@@ -79,9 +145,9 @@
             <td>{{trabajador.persona_fk.apellido_paterno}} {{trabajador.persona_fk.apellido_materno}}</td>
             <td>{{trabajador.persona_fk.sexo}}</td>
             <td>{{trabajador.cargo_fk.nombre_cargo}}</td>
-            {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1%}
+            {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1 %}
             <td>
-                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal{{trabajador.id}}">Eliminar</a>
+                <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{trabajador.id}}">Eliminar</a>
             </td>
             {% endif %}
 
@@ -125,6 +191,9 @@
         {% endif %}
     </span>
 </div>
+
+
+
 
 
 
