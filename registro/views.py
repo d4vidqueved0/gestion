@@ -4,6 +4,7 @@ from .forms import FormularioDatosPersonales, FormularioContactoEmergencia, Form
 from .models import Trabajador, Cargo, Persona, CargaFamiliar, ContactoEmergencia
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def vistaDatosPersonales(request):
@@ -29,7 +30,6 @@ def vistaCargaFamiliar(request):
             return redirect('registro:vistaContactoEmergencia')
         return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
 
-
 @login_required
 def vistaContactoEmergencia(request):
     if request.method == 'GET':
@@ -39,7 +39,8 @@ def vistaContactoEmergencia(request):
         form = FormularioContactoEmergencia(request.POST)
         if form.is_valid():
             request.session['contacto'] = form.cleaned_data
-        return redirect('registro:vistaDatosLaborales')
+            return redirect('registro:vistaDatosLaborales')
+        return render(request, 'registro/formulario_contacto_emergencia.html', {'form': form})
 
 @login_required
 def vistaDatosLaborales(request):
@@ -53,16 +54,8 @@ def vistaDatosLaborales(request):
             carga_data = request.session.get('carga')
             contacto_data = request.session.get('contacto')
 
-            # Crear instancias de los modelos
             persona = Persona.objects.create(**persona_data)
-            carga = CargaFamiliar.objects.create(**carga_data)
-            contacto = ContactoEmergencia.objects.create(**contacto_data)
-
-            nuevo_dato = form.save(commit=False)
-            nuevo_dato.persona_fk = persona
-            nuevo_dato.contacto_emergencia_fk = contacto
-            nuevo_dato.carga_familiar_fk = carga
-
+    
             username = f'{persona.rut}'
             password = f'{persona.apellido_paterno}{persona.apellido_materno}'
             contraseña_encriptada = make_password(password)
@@ -71,9 +64,26 @@ def vistaDatosLaborales(request):
                 username=username,
                 password=contraseña_encriptada
             )
+  
+            trabajador = Trabajador.objects.create(
+                persona_fk=persona,
+                cargo_fk=form.cleaned_data['cargo_fk'],
+                fecha_ingreso=form.cleaned_data['fecha_ingreso'],
+                departamento_fk=form.cleaned_data['departamento_fk'],
+                user_fk=user
+            )
 
-            nuevo_dato.user_fk = user
-            nuevo_dato.save()
+            CargaFamiliar.objects.create(
+                **carga_data,
+                trabajador_fk=trabajador  
+            )
+            ContactoEmergencia.objects.create(
+                **contacto_data,
+                trabajador_fk=trabajador
+            )
 
-            return redirect('usuarios:login')
+            return redirect('panel:panel')
         return render(request, 'registro/formulario_datos_laborales.html', {'form': form})
+
+
+

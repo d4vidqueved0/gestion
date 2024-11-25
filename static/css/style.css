@@ -1,0 +1,93 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --primary-color: #007bff;
+    --pseudo-fondo: #f4f4f4;
+    --invert: 0;
+    --no-edit:rgb(227, 227, 227)4;
+  }
+  
+  [data-theme="dark"] {
+    --bg-color: #212121;
+    --text-color: #ffffff;
+    --primary-color: #bb86fc;
+    --pseudo-fondo: #454545;
+    --invert: 1;
+    --no-edit: #393939;
+
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  nav  a , td{
+    color: var(--text-color) !important;
+  }
+
+  th{
+    background-color: var(--pseudo-fondo) !important;
+    color: var(--text-color) !important;
+  }
+  
+  input, select{
+    background-color: var(--pseudo-fondo) !important;
+    color: var(--text-color) !important;
+  }
+
+  nav{
+    background-color: var(--pseudo-fondo);
+  }
+  
+  span{
+    filter: invert(var(--invert));
+
+  }
+
+  .navbar-toggler{
+    border: var(--text-color) 1px solid ;
+  }
+  .card{
+    background: var(--pseudo-fondo);
+  }
+
+.pseudofondo{
+    background: var(--pseudo-fondo);
+}
+
+
+form.edit:read-only{
+    cursor: not-allowed;
+}
+
+.btn-warning{
+    color: white !important;
+}
+
+div > .btn-primary{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+input::placeholder{
+    color: var(--text-color) !important;
+}
+
+#filtroMenu button{
+    width: 100%;
+    display: flex !important;
+    justify-content: space-between !important;
+}
+
+.modal-content{
+    background-color: var(--pseudo-fondo) !important;
+}
+
+input[readonly]{
+  background-color: #f1f1f1 !important; 
+  pointer-events: none !important;  
+  opacity: 0.3 !important;
+  color:  var(--no-edit) !important;  
+}
+

@@ -40,6 +40,30 @@ class Cargo(models.Model):
         return self.nombre_cargo
 
 
+
+class Persona(models.Model):
+    Sexo = (
+        ('Masculino', 'Masculino'),
+        ('Femenino', 'Femenino'),
+    )
+    nombres = models.CharField(max_length=30)
+    apellido_paterno = models.CharField(max_length=20)
+    apellido_materno = models.CharField(max_length=20)
+    rut = models.CharField(max_length=12)
+    sexo = models.CharField(max_length=30, choices=Sexo)
+    direccion = models.CharField(max_length=50)
+    telefono = models.CharField(max_length=15)
+
+
+
+
+class Trabajador(models.Model):
+    persona_fk = models.OneToOneField(Persona,on_delete=models.CASCADE)
+    fecha_ingreso = models.DateField(null=True)
+    cargo_fk = models.ForeignKey(Cargo, on_delete=models.CASCADE)
+    departamento_fk = models.ForeignKey(Departamento, on_delete=models.CASCADE)
+    user_fk = models.OneToOneField(User, on_delete=models.CASCADE)
+
 class ContactoEmergencia(models.Model):
     Relaciones = (
         ('Padre', 'Padre'),
@@ -64,9 +88,11 @@ class ContactoEmergencia(models.Model):
         
     )
 
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=30)
     relacion = models.CharField(max_length=20, choices=Relaciones)
     telefono = models.CharField(max_length=15)
+    trabajador_fk =models.ForeignKey(Trabajador, on_delete=models.CASCADE)
+
 
 
 class CargaFamiliar(models.Model):
@@ -96,33 +122,11 @@ class CargaFamiliar(models.Model):
         ('Femenino', 'Femenino'),
     )
     rut = models.CharField(max_length=12)
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=30)
     sexo = models.CharField(max_length=30, choices=Sexo)
     parentesco = models.CharField(max_length=20, choices=Parentescos)
-
-
-
-class Persona(models.Model):
-    Sexo = (
-        ('Masculino', 'Masculino'),
-        ('Femenino', 'Femenino'),
-    )
-    nombres = models.CharField(max_length=100)
-    apellido_paterno = models.CharField(max_length=100)
-    apellido_materno = models.CharField(max_length=100)
-    rut = models.CharField(max_length=12)
-    sexo = models.CharField(max_length=30, choices=Sexo)
-    direccion = models.CharField(max_length=200)
-    telefono = models.CharField(max_length=15)
+    trabajador_fk =models.ForeignKey(Trabajador, on_delete=models.CASCADE)
 
 
 
 
-class Trabajador(models.Model):
-    persona_fk = models.OneToOneField(Persona,on_delete=models.CASCADE)
-    fecha_ingreso_fk = models.DateField(null=True)
-    cargo_fk = models.ForeignKey(Cargo, on_delete=models.CASCADE)
-    contacto_emergencia_fk = models.ForeignKey(ContactoEmergencia, on_delete=models.CASCADE)
-    carga_familiar_fk = models.ForeignKey(CargaFamiliar, on_delete=models.CASCADE)
-    departamento_fk = models.ForeignKey(Departamento, on_delete=models.CASCADE)
-    user_fk = models.OneToOneField(User, on_delete=models.CASCADE)

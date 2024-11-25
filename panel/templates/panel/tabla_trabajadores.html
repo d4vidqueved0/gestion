@@ -3,14 +3,6 @@
 {% block title %}Tabla trabajadores{% endblock %}
 
 {% block content %}
-<style>
-    .no-button{
-        background: none;
-        border: none;
-        color: white;
-        padding: 0;
-    }
-</style>
 <h1>Tabla trabajadores</h1>
 {% if messages %}
 <div class="messages">
@@ -30,73 +22,88 @@
         <form class="d-flex" style="width: 100%;" role="search" method="get">
             <input class="form-control me-2" value="{{ query }}" type="search" name="search" placeholder="Buscar"
                 aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
+            <button class="btn btn-success" type="submit">Buscar</button>
         </form>
+        {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1 %}
+        <p style="margin: 0;">
+          <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Filtrar
+          </button>
+        </p>
+        {% endif %}
       </div>
-      <p style="margin: 0;">
-        <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-          Filtrar
-        </button>
-      </p>
       <div class="collapse collapse-horizontal mb-3" id="collapseExample" style="position: absolute; right: 0; top: 45px;">
     <div class="card card-body" style="width: fit-content;">
-        <div style="display: grid; grid-template-columns: 100px 100px; width: fit-content; gap: 5px;">
+        <div style="display: grid; grid-template-columns: 100px 100px; width: fit-content; gap: 5px;" id="filtroMenu">
 
-            <form method="get" role="order">
+            <form method="get" role="order" id="filtros">
                 <input type="hidden" name="order" value="persona_fk__rut">
-                <button class="btn btn-primary btn-sm">RUT<i class="bi bi-arrow-up"></i> </button>
+                <button class="btn btn-light btn-sm">RUT<i class="bi bi-arrow-up"></i> </button>
 
             </form>
             <form role="order" method="get">
                 <input type="hidden" name="order" value="-persona_fk__rut">
-                <button class="btn btn-primary btn-sm">RUT<i class="bi bi-arrow-down"></i></button>
+                <button class="btn btn-light btn-sm">RUT<i class="bi bi-arrow-down"></i></button>
             </form>
 
             <form method="get" role="order">
                 <input type="hidden" name="order" value="persona_fk__nombres">
-                <button class="btn btn-primary btn-sm">Nombres<i class="bi bi-arrow-up"></i></button>
+                <button class="btn btn-light btn-sm">Nombres<i class="bi bi-arrow-up"></i></button>
             </form>
 
             <form method="get" role="order">
                 <input type="hidden" name="order" value="-persona_fk__nombres">
-                <button class="btn btn-primary btn-sm">Nombres <i class="bi bi-arrow-down"></i></button>
+                <button class="btn btn-light btn-sm">Nombres <i class="bi bi-arrow-down"></i></button>
             </form>
             <form method="get" role="order">
 
                 <input type="hidden" name="order" value="persona_fk__apellido_paterno">
-                <button class="btn btn-primary btn-sm">Apellidos<i class="bi bi-arrow-up"></i></button>
+                <button class="btn btn-light btn-sm">Apellidos<i class="bi bi-arrow-up"></i></button>
 
             </form>
             <form method="get" role="order">
 
                 <input type="hidden" name="order" value="-persona_fk__apellido_paterno">
-                <button class="btn btn-primary btn-sm">Apellidos<i class="bi bi-arrow-down"></i></button>
+                <button class="btn btn-light btn-sm">Apellidos<i class="bi bi-arrow-down"></i></button>
 
             </form>
             <form method="get" role="order">
 
                 <input type="hidden" name="order" value="persona_fk__sexo">
-                <button class="btn btn-primary btn-sm">Sexo<i class="bi bi-arrow-up"></i></button>
+                <button class="btn btn-light btn-sm">Sexo<i class="bi bi-arrow-up"></i></button>
 
             </form>
             <form method="get" role="order">
 
                 <input type="hidden" name="order" value="-persona_fk__sexo">
-                <button class="btn btn-primary btn-sm">Sexo<i class="bi bi-arrow-down"></i></button>
+                <button class="btn btn-light btn-sm">Sexo<i class="bi bi-arrow-down"></i></button>
 
             </form>
             <form method="get" role="order">
 
                 <input type="hidden" name="order" value="cargo_fk__nombre_cargo">
-                <button class="btn btn-primary btn-sm">Cargo<i class="bi bi-arrow-up"></i></button>
+                <button class="btn btn-light btn-sm">Cargo<i class="bi bi-arrow-up"></i></button>
 
             </form>
             <form method="get" role="order">
 
                 <input type="hidden" name="order" value="-cargo_fk__nombre_cargo">
-                <button class="btn btn-primary btn-sm">Cargo<i class="bi bi-arrow-down"></i></button>
+                <button class="btn btn-light btn-sm">Cargo<i class="bi bi-arrow-down"></i></button>
 
             </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="fecha_ingreso">
+                <button class="btn btn-light btn-sm">Fecha<i class="bi bi-arrow-up"></i></button>
+
+            </form>
+            <form method="get" role="order">
+
+                <input type="hidden" name="order" value="-fecha_ingreso">
+                <button class="btn btn-light btn-sm">Fecha<i class="bi bi-arrow-down"></i></button>
+
+            </form>
+
 
         </div>
     </div>
@@ -105,11 +112,11 @@
 
 
 
-<div class="table-responsive">
+<div class="table-responsive mt-3">
 <table class="table">
-    <thead class="table-dark">
+    <thead>
         <tr>
-          
+        
                 <th style="border-radius: 7px 0px 0px 0px;">
                     R.U.T
                 </th>
@@ -129,6 +136,9 @@
                 <th>
                     Cargo
                 </th>
+                <th>
+                    Fecha de ingreso
+                </th>
             {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1 %}
             <th style="border-radius: 0px 7px 0px 0px;">
                 Acción
@@ -140,11 +150,12 @@
     {% for trabajador in page_obj %}
     <tbody>
         <tr>
-            <th scope="row">{{trabajador.persona_fk.rut}}</th>
+            <td>{{trabajador.persona_fk.rut}}</td>
             <td>{{trabajador.persona_fk.nombres}}</td>
             <td>{{trabajador.persona_fk.apellido_paterno}} {{trabajador.persona_fk.apellido_materno}}</td>
             <td>{{trabajador.persona_fk.sexo}}</td>
             <td>{{trabajador.cargo_fk.nombre_cargo}}</td>
+            <td>{{trabajador.fecha_ingreso}}</td>
             {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1 %}
             <td>
                 <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{trabajador.id}}">Eliminar</a>
@@ -153,8 +164,8 @@
 
         </tr>
     </tbody>
-    <div class="modal" id="modal{{trabajador.id}}" tabindex="-1">
-        <div class="modal-dialog">
+    <div class="modal fade" id="modal{{trabajador.id}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Advertencia</h5>
@@ -165,7 +176,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar' trabajador.id %}">Eliminar</a>
+              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar' trabajador.pk %}">Eliminar</a>
             </div>
           </div>
         </div>

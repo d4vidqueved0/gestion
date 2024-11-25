@@ -5,7 +5,9 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
-from registro.forms import FormularioDatosPersonales, FormularioCargaFamiliar, FormularioContactoEmergencia
+from registro.forms import FormularioDatosPersonales, FormularioCargaFamiliar, FormularioContactoEmergencia, FormularioContraseña
+from django.contrib.auth import update_session_auth_hash
+
 
 # Create your views here.
 @login_required
@@ -45,9 +47,8 @@ def tabla(request):
 
     return render(request, 'panel/tabla_trabajadores.html', {'page_obj': page_obj, 'query': query})
 
-
+@login_required
 def eliminar(request, delete):
-    print(delete)
     if delete:
         trabajador = get_object_or_404(Trabajador, pk=delete)
         trabajador.delete()
@@ -55,18 +56,17 @@ def eliminar(request, delete):
     
     return redirect('panel:tabla')
 
-
+@login_required
 def inicio(request):
     return render(request, 'panel/inicio.html')
 
-
+@login_required
 def datos(request, pk):
     persona = get_object_or_404(Persona, pk=pk)
-    cargasF = CargaFamiliar.objects.filter(trabajador = request.user.trabajador)
-    contactoE = ContactoEmergencia.objects.filter(trabajador = request.user.trabajador)
+    cargasF = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
+    contactoE = ContactoEmergencia.objects.filter(trabajador_fk = request.user.trabajador)
     if request.method == 'POST':
         form = FormularioDatosPersonales(request.POST,  instance=persona, skip_rut_validation=True)
-        print(form.is_valid())
         if form.is_valid():
             form.save()
             form = FormularioDatosPersonales(instance=persona)
@@ -79,3 +79,109 @@ def datos(request, pk):
     else:
         form = FormularioDatosPersonales(instance=persona)
         return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})
+
+@login_required
+def editar_carga(request, pk):
+    carga = get_object_or_404(CargaFamiliar, pk=pk)
+    if request.method == 'POST':
+        formC = FormularioCargaFamiliar(request.POST, instance=carga)
+        if formC.is_valid():
+            formC.save()
+            return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+    else:
+        formC = FormularioCargaFamiliar(instance=carga)
+        return render(request, 'panel/editar_carga.html', {'formC': formC})
+    
+@login_required
+def editar_contacto(request, pk):
+    contacto = get_object_or_404(ContactoEmergencia, pk=pk)
+    if request.method == 'POST':
+        formE = FormularioContactoEmergencia(request.POST, instance=contacto)
+        if formE.is_valid():
+            formE.save()
+            return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+    else:
+        formE = FormularioContactoEmergencia(instance=contacto)
+        return render(request, 'panel/editar_contacto.html', {'formE': formE})
+    
+@login_required
+def agregar_carga_familiar(request):
+    cargas = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
+    if cargas.count() >= 5:
+        messages.error(request, 'No se pueden agregar más de 5 cargas familiares.')
+        return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+    else:
+        if request.method == 'GET':
+            form = FormularioCargaFamiliar()
+            return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
+        else:
+            form = FormularioCargaFamiliar(request.POST)
+            cargas = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
+            if form.is_valid():
+                if cargas.filter(rut=form.cleaned_data['rut']).exists():
+                    messages.warning(request, 'Ya existe una carga familiar con ese RUT.')
+                    return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
+                else:
+                    trabajador = request.user.trabajador
+                    print(form.cleaned_data)
+                    carga = CargaFamiliar.objects.create(
+                        **form.cleaned_data,
+                        trabajador_fk= trabajador
+                    )
+                    return render(request, 'panel/datos.html', {'pk': request.user.trabajador.persona_fk.pk})
+            else:
+                return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
+        
+@login_required
+def agregar_contacto_emergencia(request):
+    contactos = ContactoEmergencia.objects.filter(trabajador_fk = request.user.trabajador)
+    if contactos.count() >= 3:
+        messages.error(request, 'No se pueden agregar más de 3 contactos de emergencia.')
+        return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+    else:
+        if request.method == 'GET':
+            form = FormularioContactoEmergencia()
+            return render(request, 'registro/formulario_contacto_emergencia.html', {'form': form})
+        else:
+            form = FormularioContactoEmergencia(request.POST)
+            if form.is_valid():
+                trabajador = request.user.trabajador
+                print(form.cleaned_data)
+                contacto = ContactoEmergencia.objects.create(
+                    **form.cleaned_data,
+                    trabajador_fk= trabajador
+                )
+                return render(request, 'panel/panel.html', {'trabajador': request.user.trabajador})
+            else:
+                return render(request, 'registro/formulario_contacto_emergencia.html', {'form': form})
+        
+
+        
+@login_required
+def eliminar_carga(request, pk):
+    carga = get_object_or_404(CargaFamiliar, pk=pk)
+    carga.delete()
+    messages.success(request, 'Carga familiar eliminada correctamente.')
+    return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+
+@login_required
+def eliminar_contacto(request, pk):
+    contacto = get_object_or_404(ContactoEmergencia, pk=pk)
+    contacto.delete()
+    messages.success(request, 'Contacto de emergencia eliminado correctamente.')
+    return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+
+
+def cambiar_contraseña(request):
+    if request.method == 'POST':
+        form = FormularioContraseña(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            messages.success(request, 'La contraseña se cambió correctamente.')
+            return redirect('panel:panel')
+        else:
+            messages.error(request, 'Por favor corrige los errores a continuación.')
+    else:
+        form = FormularioContraseña(request.user)
+    return render(request, 'panel/cambiar_contraseña.html', {'form': form})

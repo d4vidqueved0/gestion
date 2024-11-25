@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar carga familiar{% endblock %}
+{% block content %}
+
+<h1>Editar carga familiar</h1>
+
+<form method="post" class="edit">
+    {% csrf_token %}
+   
+        <div class="form-group">
+            <label for="id_rut">RUT</label>
+            <input type="text" name="rut" id="id_rut" value="{{ formC.rut.value }}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label for="id_nombres">Nombre</label>
+            {{formC.nombre}}
+        </div>
+        <div class="form-group">
+            <label for="id_sexo">Sexo</label>
+                {{formC.sexo}}
+        </div>
+        <div class="form-group">
+            <label for="id_parentesco">Parentesco</label>
+            {{formC.parentesco}}
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Guardar cambios</button>
+
+</form>
+
+{% endblock %}

@@ -1,6 +1,8 @@
 from django import forms
 from .models import Trabajador, Departamento, ContactoEmergencia, CargaFamiliar, Cargo, Persona
 from .validar_rut import validarRut
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 
 class FormularioDatosPersonales(forms.ModelForm):
     class Meta:
@@ -57,15 +59,15 @@ class FormularioDatosPersonales(forms.ModelForm):
 class FormularioDatosLaborales(forms.ModelForm):
     class Meta:
         model = Trabajador
-        fields = ['cargo_fk', 'fecha_ingreso_fk', 'departamento_fk'] 
+        fields = ['cargo_fk', 'fecha_ingreso', 'departamento_fk'] 
         widgets = {
             'cargo_fk': forms.Select(attrs={'class': 'form-control'}, choices=Cargo.Cargos),
-            'fecha_ingreso_fk': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'fecha_ingreso': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'departamento_fk': forms.Select(attrs={'class': 'form-control'}),
         }
         labels = {
             'cargo_fk': 'Cargo',
-            'fecha_ingreso_fk': 'Fecha de Ingreso',
+            'fecha_ingreso': 'Fecha de Ingreso',
             'departamento_fk': 'Departamento',
         }
 
@@ -116,5 +118,22 @@ class FormularioCargaFamiliar(forms.ModelForm):
 
         if not validarRut(rut):
             raise forms.ValidationError("El R.U.T. no es válido.")
-
+        
         return rut
+    
+
+
+class FormularioContraseña(PasswordChangeForm):
+
+    old_password = forms.CharField(
+        label='Contraseña antigua',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    new_password1 = forms.CharField(
+        label='Nueva contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    new_password2 = forms.CharField(
+        label='Confirmar nueva contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )

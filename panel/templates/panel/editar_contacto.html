@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar contacto emergencia{% endblock %}
+{% block content %}
+
+<h1>Editar contacto emergencia</h1>
+
+<form method="post">
+    {% csrf_token %}
+   
+        <div class="form-group">
+            <label for="id_nombres">Nombre</label>
+            {{formE.nombre}}
+        </div>
+        <div class="form-group">
+            <label for="id_relacion">Relacion</label>
+                {{formE.relacion}}
+        </div>
+        <div class="form-group">
+            <label for="id_telefono">Telefono</label>
+            {{formE.telefono}}
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Guardar cambios</button>
+
+</form>
+
+{% endblock %}
