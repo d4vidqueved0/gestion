@@ -1,8 +1,9 @@
 from django import forms
-from .models import Trabajador, Departamento, ContactoEmergencia, CargaFamiliar, Cargo, Persona
+from .models import Trabajador, ContactoEmergencia, CargaFamiliar, Cargo, Persona
 from .validar_rut import validarRut
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from .contraseña_segura import validar_contraseña
+
 
 class FormularioDatosPersonales(forms.ModelForm):
     class Meta:
@@ -25,14 +26,18 @@ class FormularioDatosPersonales(forms.ModelForm):
     def clean_telefono(self):
         telefono = self.cleaned_data['telefono']
         len_tel = len(telefono)
+    
         try:
             telefono = int(telefono)
         except:
             telefono
         if type(telefono) != int:
             raise forms.ValidationError('Ingrese solo numeros')
-        if len_tel > 8 or len_tel < 8:
-            raise forms.ValidationError('Ingrese el telefono sin prefijo, ejemplo: 11111111')
+        if len_tel > 9 or len_tel < 9:
+            raise forms.ValidationError('Ingrese el telefono sin prefijo, ejemplo: 911111111')
+        if str(telefono)[:1] != '9':
+            raise forms.ValidationError('Recuerde colocar el 9, ejemplo 911111111')
+
         return str(telefono)
     
 
@@ -101,14 +106,18 @@ class FormularioContactoEmergencia(forms.ModelForm):
     def clean_telefono(self):
         telefono = self.cleaned_data['telefono']
         len_tel = len(telefono)
+    
         try:
             telefono = int(telefono)
         except:
             telefono
         if type(telefono) != int:
             raise forms.ValidationError('Ingrese solo numeros')
-        if len_tel > 8 or len_tel < 8:
-            raise forms.ValidationError('Ingrese el telefono sin prefijo, ejemplo: 11111111')
+        if len_tel > 9 or len_tel < 9:
+            raise forms.ValidationError('Ingrese el telefono sin prefijo, ejemplo: 911111111')
+        if str(telefono)[:1] != '9':
+            raise forms.ValidationError('Recuerde colocar el 9, ejemplo 911111111')
+
         return str(telefono)
 
 
@@ -164,3 +173,13 @@ class FormularioContraseña(PasswordChangeForm):
         label='Confirmar nueva contraseña',
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Las contraseñas no coinciden.")
+
+        validar_contraseña(password1)
+        return password2

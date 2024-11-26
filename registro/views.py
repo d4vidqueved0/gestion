@@ -81,7 +81,8 @@ def vistaDatosLaborales(request):
                 **contacto_data,
                 trabajador_fk=trabajador
             )
-
+            
+            messages.success(request, 'Se creó correctamente la ficha del trabajador')
             return redirect('panel:panel')
         return render(request, 'registro/formulario_datos_laborales.html', {'form': form})
 

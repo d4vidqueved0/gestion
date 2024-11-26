@@ -15,10 +15,13 @@ def panel(request):
     if request.user.is_authenticated :
         try:
             trabajador = request.user.trabajador
+            print(trabajador.contraseña_cambiada)
+            if not trabajador.contraseña_cambiada:
+                messages.warning(request, 'Antes de continuar debe cambiar la contraseña predeterminada. La contraseña es su apellido paterno combinado con el materno ejemplo: SotoPerez')
+                return redirect('panel:cambiar_contraseña')
         except:
             return render(request, 'panel/panel.html')        
         return render(request, 'panel/panel.html', {'trabajador': trabajador})
-
     else:
         return redirect('usuarios:login')
     
@@ -189,10 +192,10 @@ def cambiar_contraseña(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  
+            user.trabajador.contraseña_cambiada = True
+            user.trabajador.save()
             messages.success(request, 'La contraseña se cambió correctamente.')
             return redirect('panel:panel')
-        else:
-            messages.error(request, 'Por favor corrige los errores a continuación.')
     else:
         form = FormularioContraseña(request.user)
     return render(request, 'panel/cambiar_contraseña.html', {'form': form})

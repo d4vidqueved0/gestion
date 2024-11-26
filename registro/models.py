@@ -60,9 +60,11 @@ class Persona(models.Model):
 class Trabajador(models.Model):
     persona_fk = models.OneToOneField(Persona,on_delete=models.CASCADE)
     fecha_ingreso = models.DateField(null=True)
+    contraseña_cambiada = models.BooleanField(default=False)
     cargo_fk = models.ForeignKey(Cargo, on_delete=models.CASCADE)
     departamento_fk = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     user_fk = models.OneToOneField(User, on_delete=models.CASCADE)
+
 
 class ContactoEmergencia(models.Model):
     Relaciones = (
