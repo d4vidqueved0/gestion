@@ -22,6 +22,20 @@ class FormularioDatosPersonales(forms.ModelForm):
         self.skip_rut_validation = kwargs.pop('skip_rut_validation', False)
         super().__init__(*args, **kwargs)
 
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        len_tel = len(telefono)
+        try:
+            telefono = int(telefono)
+        except:
+            telefono
+        if type(telefono) != int:
+            raise forms.ValidationError('Ingrese solo numeros')
+        if len_tel > 8 or len_tel < 8:
+            raise forms.ValidationError('Ingrese el telefono sin prefijo, ejemplo: 11111111')
+        return str(telefono)
+    
+
     def clean_rut(self):
 
         if self.skip_rut_validation:
@@ -83,6 +97,19 @@ class FormularioContactoEmergencia(forms.ModelForm):
             'relacion': forms.Select(attrs={'class': 'form-control'}, choices=ContactoEmergencia.Relaciones),
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        len_tel = len(telefono)
+        try:
+            telefono = int(telefono)
+        except:
+            telefono
+        if type(telefono) != int:
+            raise forms.ValidationError('Ingrese solo numeros')
+        if len_tel > 8 or len_tel < 8:
+            raise forms.ValidationError('Ingrese el telefono sin prefijo, ejemplo: 11111111')
+        return str(telefono)
 
 
 class FormularioCargaFamiliar(forms.ModelForm):

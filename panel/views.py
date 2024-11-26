@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
-from registro.forms import FormularioDatosPersonales, FormularioCargaFamiliar, FormularioContactoEmergencia, FormularioContraseña
+from registro.forms import FormularioDatosPersonales, FormularioCargaFamiliar, FormularioContactoEmergencia, FormularioContraseña, FormularioDatosLaborales
 from django.contrib.auth import update_session_auth_hash
 
 
@@ -56,59 +56,69 @@ def eliminar(request, delete):
     
     return redirect('panel:tabla')
 
-@login_required
-def inicio(request):
-    return render(request, 'panel/inicio.html')
 
 @login_required
 def datos(request, pk):
     persona = get_object_or_404(Persona, pk=pk)
-    cargasF = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
-    contactoE = ContactoEmergencia.objects.filter(trabajador_fk = request.user.trabajador)
-    if request.method == 'POST':
-        form = FormularioDatosPersonales(request.POST,  instance=persona, skip_rut_validation=True)
-        if form.is_valid():
-            form.save()
-            form = FormularioDatosPersonales(instance=persona)
-            messages.success(request, 'Datos personales actualizados correctamente.')
-            return redirect('panel:panel')
+    if request.user.trabajador.persona_fk.pk == persona.pk:
+        cargasF = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
+        contactoE = ContactoEmergencia.objects.filter(trabajador_fk = request.user.trabajador)
+        if request.method == 'POST':
+            form = FormularioDatosPersonales(request.POST,  instance=persona, skip_rut_validation=True)
+            if form.is_valid():
+                form.save()
+                form = FormularioDatosPersonales(instance=persona)
+                messages.success(request, 'Datos personales actualizados correctamente.')
+                return redirect('panel:panel')
+            else:
+                form = FormularioDatosPersonales(instance=persona)
+                return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})
+
         else:
             form = FormularioDatosPersonales(instance=persona)
-            return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})
-
+            return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE })
     else:
-        form = FormularioDatosPersonales(instance=persona)
-        return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})
+        messages.error(request, 'No puede acceder a informacion que no está asociada a su cuenta')
+        return redirect('usuarios:login')
+
 
 @login_required
 def editar_carga(request, pk):
     carga = get_object_or_404(CargaFamiliar, pk=pk)
-    if request.method == 'POST':
-        formC = FormularioCargaFamiliar(request.POST, instance=carga)
-        if formC.is_valid():
-            formC.save()
-            return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+    if request.user.trabajador == carga.trabajador_fk:
+        if request.method == 'POST':
+            formC = FormularioCargaFamiliar(request.POST, instance=carga)
+            if formC.is_valid():
+                formC.save()
+                return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+        else:
+            formC = FormularioCargaFamiliar(instance=carga)
+            return render(request, 'panel/editar_carga.html', {'formC': formC})
     else:
-        formC = FormularioCargaFamiliar(instance=carga)
-        return render(request, 'panel/editar_carga.html', {'formC': formC})
+        messages.error(request, 'No puede editar una carga familiar que no está asociada a su cuenta')
+        return redirect('panel:panel')
     
 @login_required
 def editar_contacto(request, pk):
     contacto = get_object_or_404(ContactoEmergencia, pk=pk)
-    if request.method == 'POST':
-        formE = FormularioContactoEmergencia(request.POST, instance=contacto)
-        if formE.is_valid():
-            formE.save()
-            return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+    if request.user.trabajador == contacto.trabajador_fk:
+        if request.method == 'POST':
+            formE = FormularioContactoEmergencia(request.POST, instance=contacto)
+            if formE.is_valid():
+                formE.save()
+                return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
+        else:
+            formE = FormularioContactoEmergencia(instance=contacto)
+            return render(request, 'panel/editar_contacto.html', {'formE': formE})
     else:
-        formE = FormularioContactoEmergencia(instance=contacto)
-        return render(request, 'panel/editar_contacto.html', {'formE': formE})
+        messages.error(request, 'No puede editar un contacto que no está asociado a su cuenta')
+        return redirect('panel:panel')
     
 @login_required
 def agregar_carga_familiar(request):
     cargas = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
     if cargas.count() >= 5:
-        messages.error(request, 'No se pueden agregar más de 5 cargas familiares.')
+        messages.warning(request, 'No se pueden agregar más de 5 cargas familiares.')
         return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
     else:
         if request.method == 'GET':
@@ -136,7 +146,7 @@ def agregar_carga_familiar(request):
 def agregar_contacto_emergencia(request):
     contactos = ContactoEmergencia.objects.filter(trabajador_fk = request.user.trabajador)
     if contactos.count() >= 3:
-        messages.error(request, 'No se pueden agregar más de 3 contactos de emergencia.')
+        messages.warning(request, 'No se pueden agregar más de 3 contactos de emergencia.')
         return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
     else:
         if request.method == 'GET':
@@ -151,7 +161,8 @@ def agregar_contacto_emergencia(request):
                     **form.cleaned_data,
                     trabajador_fk= trabajador
                 )
-                return render(request, 'panel/panel.html', {'trabajador': request.user.trabajador})
+                messages.success(request, 'Se agrego correctamente el contacto de emergencia')
+                return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
             else:
                 return render(request, 'registro/formulario_contacto_emergencia.html', {'form': form})
         

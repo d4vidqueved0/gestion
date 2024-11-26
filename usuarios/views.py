@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('panel:panel')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']

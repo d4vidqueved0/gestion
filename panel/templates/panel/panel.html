@@ -4,29 +4,31 @@
 
 {% block content %}
 
+<h1 style='text-align: center;'>EL CORREO DE YURY</h1>
 {% if trabajador %}
-    <h1 style='text-align: center;'>Bienvenido {{user.trabajador.persona_fk.nombres}} {{user.trabajador.persona_fk.apellido_paterno}}</h1>
-
-    <div style="display: grid; gap: 10px; grid-template-columns: .5fr .5fr;grid-template-rows: 50px 50px; padding: 30px 0px; justify-content: space-between;">
-    {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Personal RR.HH' or request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH'  %}
-        <a href="{% url 'registro:vistaDatosPersonales' %}" class="btn btn-primary">Crear ficha</a>
-        <a href="{% url 'panel:tabla' %}" class="btn btn-primary">Resumen trabajadores</a>
+<div style="display: grid; gap: 10px; grid-template-columns: repeat(3, 3fr);grid-template-rows: 50px 50px; padding: 30px 0px; justify-content: space-between;">
+    {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Personal RR.HH' or request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' %}
+    <a href="{% url 'registro:vistaDatosPersonales' %}" class="btn btn-primary">Crear ficha</a>
+    <a href="{% url 'panel:tabla' %}" class="btn btn-primary">Resumen trabajadores</a>
     {% endif %}
-        <a href="{% url 'panel:datos' trabajador.persona_fk.pk %}" class="btn btn-primary">Ver mis datos</a>
-        <a href="{% url 'panel:cambiar_contraseña' %}" class="btn btn-primary">Cambiar contraseña</a>
-    </div>
-{% else %}
-<h1>Bienvenido Admin</h1>
-<div style="display: grid; gap: 10px; grid-template-columns: .5fr .5fr;grid-template-rows: 50px 50px; padding: 30px 0px; justify-content: space-between;">
+    <a href="{% url 'panel:datos' trabajador.persona_fk.pk %}" class="btn btn-primary">Ver mis datos</a>
+    <a href="{% url 'panel:cambiar_contraseña' %}" class="btn btn-primary">Cambiar contraseña</a>
+    <a href="{% url 'usuarios:logout' %}" class="btn btn-primary">Cerrar Sesión</a>
+</div>
+{%else %}
+<div style="display: grid; gap: 10px; grid-template-columns: repeat(3, 3fr);grid-template-rows: 50px 50px; padding: 30px 0px; justify-content: space-between;">
 
-<a href="{% url 'panel:tabla' %}" class="btn btn-primary">Resumen trabajadores</a>
 <a href="{% url 'registro:vistaDatosPersonales' %}" class="btn btn-primary">Crear ficha</a>
+<a href="{% url 'panel:tabla' %}" class="btn btn-primary">Resumen trabajadores</a>
+<a href="{% url 'usuarios:logout' %}" class="btn btn-primary">Cerrar Sesión</a>
 </div>
 
 {% endif %}
+
+
 {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show mt-3" style="font-size: 13px;" role="alert" >
+    <div class="alert {{message.tags}} alert-dismissible fade show mt-3" style="font-size: 13px;" role="alert" >
     {{message}}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>

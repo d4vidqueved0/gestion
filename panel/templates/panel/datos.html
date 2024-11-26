@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Ver mis datos{% endblock %}
+{% block title %}Mis datos{% endblock %}
 
 {% block content %}
+<h1 class="mb-2">Mis datos</h1>
 <div style="display: grid; grid-template-columns: 45% 45%; justify-content: space-between;">
     <section >
-        <h1>Datos personales</h1>
+        <h2>Datos personales</h2>
         <form  class="edit" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -36,110 +37,138 @@
                 <label for="id_telefono">Telefono</label>
                 {{form.telefono}}
             </div>
-            <button type="submit" class="btn btn-success mt-3">Guardar cambios</button>
+            <button type="submit" class="btn btn-primary mt-4">Guardar cambios</button>
         </form>
         {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show mt-3" style="font-size: 13px;" role="alert">
-            {{message}}
+        <div class="alert {{message.tags}} alert-dismissible fade show mt-3" style="font-size: 13px;" role="alert" >
+        {{message}}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+          </div>
         {% endfor %}
-        
-        {% endif %}
+    
+    {% endif %}
     </section>
-    <div>
-        <section >
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
-                <h1>Cargas familiares</h1>
-                <p style="margin: 0;">
-
-                    <a href="{% url 'panel:agregar_carga_familiar' %}" class="btn btn-success btn-sm">Agregar</a>
-                </p style="margin: 0;">
-            </div>
-            <table class="table modo-oscuro mt-3">
-                <thead>
-                    <tr>
-                        <th>Nombre </th>
-                        <th>Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for carga in cargasF %}
-                    <tr>
-                        <td>{{carga.nombre}}</td>
-                        <td>
-                            <a href="{% url 'panel:editar_carga' carga.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{carga.pk}}">Eliminar</a>
-                        </td>
-                    </tr>
-                    <div class="modal fade" id="modal{{carga.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">Advertencia</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <p>¿Está seguro de  eliminar la carga familiar {{carga.nombre}}?</p>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_carga' carga.pk %}">Eliminar</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-        <section >
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
-                <h1>Contactos emergencia</h1>
-                <p style="margin: 0;">
-
-                    <a href="{% url 'panel:agregar_contacto_emergencia' %}" class="btn btn-success btn-sm">Agregar</a>
-                </p style="margin: 0;">
-            </div>
-            <table class="table modo-oscuro mt-3" >
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for contacto in contactoE %}
-                    <tr>
-                        <td>{{contacto.nombre}}</td>
-                        <td>
-                            <a href="{% url 'panel:editar_contacto' contacto.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalC{{contacto.pk}}">Eliminar</a>
-                        </td>
-                    </tr>
-                    <div class="modal fade" id="modalC{{contacto.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">Advertencia</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <p>¿Está seguro de  eliminar el contacto de emergencia {{contacto.nombre}}?</p>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_contacto' contacto.pk %}">Eliminar</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </div>
+    <section id="datosLaborales">
+        <h2 >Datos laborales</h2>
+        <div class="form-group">
+            <label>Cargo</label>
+            <input style="cursor: not-allowed;"  type="text"  value="{{ request.user.trabajador.cargo_fk }}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label >Area</label>
+            <input style="cursor: not-allowed;" type="text"  value="{{ request.user.trabajador.departamento_fk.area_fk}}" class="form-control" readonly>
+            
+        </div>
+        <div class="form-group">
+            <label >Departamento</label>
+            <input style="cursor: not-allowed;"  type="text"  value="{{ request.user.trabajador.departamento_fk }}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Fecha de ingreso</label>
+            <input style="cursor: not-allowed;"  type="text"  value="{{ request.user.trabajador.fecha_ingreso }}" class="form-control" readonly>
+        </div>
+    </section>
 </div>
+<hr>
+<div style="display: grid; grid-template-columns: 45% 45%; justify-content: space-between;">
+    <section >
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <h2>Cargas familiares</h2>
+            <p style="margin: 0;">
 
+                <a href="{% url 'panel:agregar_carga_familiar' %}" class="btn btn-success btn-sm">Agregar</a>
+            </p style="margin: 0;">
+        </div>
+        <table class="table modo-oscuro mt-3">
+            <thead>
+                <tr>
+                    <th>RUT</th>
+                    <th>Nombre</th>
+                    <th>Parentesco</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for carga in cargasF %}
+                <tr>
+                    <td>{{carga.rut}}</td>
+                    <td>{{carga.nombre}}</td>
+                    <td>{{carga.parentesco}}</td>
+                    <td>
+                        <a href="{% url 'panel:editar_carga' carga.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{carga.pk}}">Eliminar</a>
+                    </td>
+                </tr>
+                <div class="modal fade" id="modal{{carga.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Advertencia</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p>¿Está seguro de  eliminar la carga familiar {{carga.nombre}}?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_carga' carga.pk %}">Eliminar</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section >
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <h2>Contactos emergencia</h2>
+            <p style="margin: 0;">
+
+                <a href="{% url 'panel:agregar_contacto_emergencia' %}" class="btn btn-success btn-sm">Agregar</a>
+            </p style="margin: 0;">
+        </div>
+        <table class="table modo-oscuro mt-3" >
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Relacion</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contacto in contactoE %}
+                <tr>
+                    <td>{{contacto.nombre}}</td>
+                    <td>{{contacto.telefono}}</td>
+                    <td>{{contacto.relacion}}</td>
+                    <td>
+                        <a href="{% url 'panel:editar_contacto' contacto.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalC{{contacto.pk}}">Eliminar</a>
+                    </td>
+                </tr>
+                <div class="modal fade" id="modalC{{contacto.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Advertencia</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p>¿Está seguro de  eliminar el contacto de emergencia {{contacto.nombre}}?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_contacto' contacto.pk %}">Eliminar</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
 {% endblock %}
