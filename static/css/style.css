@@ -91,9 +91,7 @@ input[readonly]{
   color:  var(--no-edit) !important;  
 }
 
-h1, h2{
-  text-align: center !important;
-}
+
 
 #datosLaborales div{
   cursor: not-allowed;
@@ -115,7 +113,7 @@ nav .btn{
 }
 
 h1, h2{
-  font-size: 2.5em
+  font-size: 1.5em
 }
 
 button{

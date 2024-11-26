@@ -80,46 +80,49 @@
                 <a href="{% url 'panel:agregar_carga_familiar' %}" class="btn btn-success btn-sm">Agregar</a>
             </p style="margin: 0;">
         </div>
-        <table class="table modo-oscuro mt-3">
-            <thead>
-                <tr>
-                    <th>RUT</th>
-                    <th>Nombre</th>
-                    <th>Parentesco</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for carga in cargasF %}
-                <tr>
-                    <td>{{carga.rut}}</td>
-                    <td>{{carga.nombre}}</td>
-                    <td>{{carga.parentesco}}</td>
-                    <td>
-                        <a href="{% url 'panel:editar_carga' carga.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                        <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{carga.pk}}">Eliminar</a>
-                    </td>
-                </tr>
-                <div class="modal fade" id="modal{{carga.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Advertencia</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <p>¿Está seguro de  eliminar la carga familiar {{carga.nombre}}?</p>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                          <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_carga' carga.pk %}">Eliminar</a>
+        <div class="table-responsive">
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>RUT</th>
+                        <th>Nombre</th>
+                        <th>Parentesco</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for carga in cargasF %}
+                    <tr>
+                        <td>{{carga.rut}}</td>
+                        <td>{{carga.nombre}}</td>
+                        <td>{{carga.parentesco}}</td>
+                        <td>
+                            <a href="{% url 'panel:editar_carga' carga.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{carga.pk}}">Eliminar</a>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="modal{{carga.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Advertencia</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p>¿Está seguro de  eliminar la carga familiar {{carga.nombre}}?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_carga' carga.pk %}">Eliminar</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
     </section>
     <section >
         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
@@ -129,46 +132,49 @@
                 <a href="{% url 'panel:agregar_contacto_emergencia' %}" class="btn btn-success btn-sm">Agregar</a>
             </p style="margin: 0;">
         </div>
-        <table class="table modo-oscuro mt-3" >
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Telefono</th>
-                    <th>Relacion</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for contacto in contactoE %}
-                <tr>
-                    <td>{{contacto.nombre}}</td>
-                    <td>{{contacto.telefono}}</td>
-                    <td>{{contacto.relacion}}</td>
-                    <td>
-                        <a href="{% url 'panel:editar_contacto' contacto.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                        <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalC{{contacto.pk}}">Eliminar</a>
-                    </td>
-                </tr>
-                <div class="modal fade" id="modalC{{contacto.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Advertencia</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <p>¿Está seguro de  eliminar el contacto de emergencia {{contacto.nombre}}?</p>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                          <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_contacto' contacto.pk %}">Eliminar</a>
+        <div class="table-responsive">
+            <table class="table mt-3" >
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Relacion</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contacto in contactoE %}
+                    <tr>
+                        <td>{{contacto.nombre}}</td>
+                        <td>{{contacto.telefono}}</td>
+                        <td>{{contacto.relacion}}</td>
+                        <td>
+                            <a href="{% url 'panel:editar_contacto' contacto.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalC{{contacto.pk}}">Eliminar</a>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="modalC{{contacto.pk}}"  data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Advertencia</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p>¿Está seguro de  eliminar el contacto de emergencia {{contacto.nombre}}?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                              <a type="a" class="btn btn-danger" href="{% url 'panel:eliminar_contacto' contacto.pk %}">Eliminar</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
     </section>
 </div>
 {% endblock %}
