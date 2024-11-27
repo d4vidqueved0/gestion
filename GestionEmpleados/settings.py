@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'registro',
     'usuarios',
     'panel',
+    'axes',
 ]
 
 from django.contrib.messages import constants as messages
@@ -52,6 +53,21 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
 }
 
+AUTHENTICATION_BACKENDS = (
+    'axes.backends.AxesStandaloneBackend',  
+    'django.contrib.auth.backends.ModelBackend', 
+)
+
+
+AXES_LOCKOUT_TEMPLATE = './usuarios/bloqueo.html'
+AXES_RESET_ON_SUCCESS = False
+AXES_ONLY_USER_FAILURES = True
+
+AXES_FAILURE_LIMIT = 3  
+AXES_COOLOFF_TIME = 2  
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,6 +76,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+
 ]
 
 ROOT_URLCONF = 'GestionEmpleados.urls'
@@ -77,6 +95,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.csrf',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -100,6 +119,9 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES', 
+        },
     }
 }
 
@@ -151,6 +173,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

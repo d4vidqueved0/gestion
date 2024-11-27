@@ -12,6 +12,12 @@
 </head>
 
 <body>
+  <div id="session_security_warning" aria-hidden="true" style="display: none;">
+    <div class="session_security_modal">
+        <p>Tu sesión está a punto de expirar debido a inactividad.</p>
+        <button>Extender sesión</button>
+    </div>
+</div>
 <nav data-bs-theme="dark" class="navbar navbar-expand-lg w-100">
   <div class="container">
     <button class="navbar-toggler button-nav" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -83,6 +89,7 @@
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
   <script src="{% static 'js/modos.js' %}"></script>
+
 </body>
 
 </html>
