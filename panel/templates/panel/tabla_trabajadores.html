@@ -24,17 +24,16 @@
             <button class="btn btn-success" type="submit">Buscar</button>
         </form>
         {% if request.user.trabajador.cargo_fk.nombre_cargo == 'Jefe RR.HH' or request.user.is_superuser == 1 %}
-        <p style="margin: 0;">
-          <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Filtrar
-          </button>
-        </p>
+            <button class="btn filtrar" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              Filtrar
+            </button>
+
+
         {% endif %}
       </div>
       <div class="collapse collapse-horizontal mb-3" id="collapseExample" style="position: absolute; right: 0; top: 45px;">
     <div class="card card-body" style="width: fit-content;">
         <div style="display: grid; grid-template-columns: 100px 100px; width: fit-content; gap: 5px;" id="filtroMenu">
-
             <form method="get" role="order" id="filtros">
                 <input type="hidden" name="order" value="persona_fk__rut">
                 <button class="btn btn-light btn-sm">RUT<i class="bi bi-arrow-up"></i> </button>
@@ -167,7 +166,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Advertencia</h5>
+              <h3 class="modal-title">Advertencia</h3>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

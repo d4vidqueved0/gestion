@@ -23,4 +23,6 @@ urlpatterns = [
     path('', include('usuarios.urls')),
     path('registro/', include('registro.urls')),
     path('panel/', include('panel.urls')),
+    path('axe/', include('django_axe.urls')),
+
 ]

@@ -67,6 +67,7 @@ def datos(request, pk):
         cargasF = CargaFamiliar.objects.filter(trabajador_fk = request.user.trabajador)
         contactoE = ContactoEmergencia.objects.filter(trabajador_fk = request.user.trabajador)
         if request.method == 'POST':
+            print(request.POST)
             form = FormularioDatosPersonales(request.POST,  instance=persona, skip_rut_validation=True)
             if form.is_valid():
                 form.save()
@@ -78,6 +79,7 @@ def datos(request, pk):
                 return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE})
 
         else:
+    
             form = FormularioDatosPersonales(instance=persona)
             return render(request, 'panel/datos.html', {'form': form, 'cargasF': cargasF, 'contactoE': contactoE })
     else:
@@ -141,7 +143,8 @@ def agregar_carga_familiar(request):
                         **form.cleaned_data,
                         trabajador_fk= trabajador
                     )
-                    return render(request, 'panel/datos.html', {'pk': request.user.trabajador.persona_fk.pk})
+                    messages.success(request, 'Se agrego correctamente la carga familiar')
+                return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
             else:
                 return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
         

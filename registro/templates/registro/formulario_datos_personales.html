@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
+<title>
+    {% block title %}Formulario Datos Personales{% endblock %}
+</title>
 {% block content %}
-<h2>Formulario de datos personales</h2>
+<h1>Formulario Datos Personales</h1>
 {{msj}}
 <form method="post">
     {% csrf_token %}

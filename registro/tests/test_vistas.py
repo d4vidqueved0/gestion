@@ -1,14 +1,13 @@
 import pytest
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.test import Client
 from registro.models import Trabajador
 
+
 @pytest.fixture
 def client():
-    user = User.objects.get(username="18071987-3")
     client = Client()
-    client.login(username="18071987-3", password="cOntraseÑa#335")
+    client.post('/', {'username': '18071987-3', 'password': 'cOntraseÑa#335'}) 
     return client
 
 
@@ -27,7 +26,7 @@ def test_resumen(client):
     assert 'Tabla trabajadores' in response.content.decode()
 
 
-def test_mis_datos(client):
+def test_mis_datos(client): 
     trabajador = Trabajador.objects.get(user_fk=client.session['_auth_user_id'])
     persona = trabajador.persona_fk.pk
     url = reverse('panel:datos', args=[persona])

@@ -52,21 +52,21 @@
     <section id="datosLaborales">
         <h2 >Datos laborales</h2>
         <div class="form-group">
-            <label>Cargo</label>
-            <input style="cursor: not-allowed;"  type="text"  value="{{ request.user.trabajador.cargo_fk }}" class="form-control" readonly>
+            <label for="cargo">Cargo</label>
+            <input style="cursor: not-allowed;"  id="cargo" type="text"  value="{{ request.user.trabajador.cargo_fk }}" class="form-control" readonly>
         </div>
         <div class="form-group">
-            <label >Area</label>
-            <input style="cursor: not-allowed;" type="text"  value="{{ request.user.trabajador.departamento_fk.area_fk}}" class="form-control" readonly>
+            <label for="area">Area</label>
+            <input style="cursor: not-allowed;"  id="area"  type="text"  value="{{ request.user.trabajador.departamento_fk.area_fk}}" class="form-control" readonly>
             
         </div>
         <div class="form-group">
-            <label >Departamento</label>
-            <input style="cursor: not-allowed;"  type="text"  value="{{ request.user.trabajador.departamento_fk }}" class="form-control" readonly>
+            <label for="departamento">Departamento</label>
+            <input style="cursor: not-allowed;"  type="text" id="departamento" value="{{ request.user.trabajador.departamento_fk }}" class="form-control" readonly>
         </div>
         <div class="form-group">
-            <label>Fecha de ingreso</label>
-            <input style="cursor: not-allowed;"  type="text"  value="{{ request.user.trabajador.fecha_ingreso }}" class="form-control" readonly>
+            <label for="fechaI">Fecha de ingreso</label>
+            <input style="cursor: not-allowed;" id="fechaI" type="text"  value="{{ request.user.trabajador.fecha_ingreso }}" class="form-control" readonly>
         </div>
     </section>
 </div>
@@ -97,7 +97,7 @@
                         <td>{{carga.nombre}}</td>
                         <td>{{carga.parentesco}}</td>
                         <td>
-                            <a href="{% url 'panel:editar_carga' carga.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{% url 'panel:editar_carga' carga.pk %}" class="btn btn-primary btn-sm">Editar</a>
                             <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{carga.pk}}">Eliminar</a>
                         </td>
                     </tr>
@@ -105,7 +105,7 @@
                         <div class="modal-dialog modal-dialog-centered">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title">Advertencia</h5>
+                              <h3 class="modal-title">Advertencia</h3>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -149,7 +149,7 @@
                         <td>{{contacto.telefono}}</td>
                         <td>{{contacto.relacion}}</td>
                         <td>
-                            <a href="{% url 'panel:editar_contacto' contacto.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{% url 'panel:editar_contacto' contacto.pk %}" class="btn btn-primary btn-sm">Editar</a>
                             <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalC{{contacto.pk}}">Eliminar</a>
                         </td>
                     </tr>
@@ -157,7 +157,7 @@
                         <div class="modal-dialog modal-dialog-centered">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title">Advertencia</h5>
+                              <h3 class="modal-title">Advertencia</h3>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">

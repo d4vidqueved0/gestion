@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
-
+<title>
+    {% block title %}Formulario Contacto de Emergencia{% endblock %}
+</title>
 {% block content %}
-<h2>Formulario de contacto de emergencia</h2>
+<h1>Formulario Contacto de Emergencia</h1>
 <form method="post">
     {% csrf_token %}
     <div style="display: flex; flex-direction: column; gap: 10px;">
