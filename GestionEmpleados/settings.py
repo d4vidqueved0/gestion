@@ -60,7 +60,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+
 ]
+
+
 
 ROOT_URLCONF = 'GestionEmpleados.urls'
 
@@ -136,8 +140,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+from django.contrib.auth.hashers import Argon2PasswordHasher
 
 PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',  
     'django.contrib.auth.hashers.Argon2PasswordHasher',  

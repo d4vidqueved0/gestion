@@ -138,7 +138,8 @@ def agregar_carga_familiar(request):
                         **form.cleaned_data,
                         trabajador_fk= trabajador
                     )
-                    return render(request, 'panel/datos.html', {'pk': request.user.trabajador.persona_fk.pk})
+                    messages.success(request, 'Se agrego correctamente la carga familiar')
+                return redirect('panel:datos', pk=request.user.trabajador.persona_fk.pk)
             else:
                 return render(request, 'registro/formulario_carga_familiar.html', {'form': form})
         
@@ -189,10 +190,10 @@ def cambiar_contraseña(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  
-            messages.success(request, 'La contraseña se cambió correctamente.')
+            messages.success(request, 'La contraseña se cambió correctamente')
             return redirect('panel:panel')
         else:
-            messages.error(request, 'Por favor corrige los errores a continuación.')
+            messages.error(request, 'Por favor corrija los errores')
     else:
         form = FormularioContraseña(request.user)
     return render(request, 'panel/cambiar_contraseña.html', {'form': form})
